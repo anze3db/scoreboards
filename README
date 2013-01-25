@@ -1,4 +1,6 @@
-This is your new Play 2.1 application
-=====================================
+Scoreboards
+==========
 
-This file will be packaged with your application, when using `play dist`.
+This app should make it easy for a game to have a global scoreboard. 
+
+Written with scala and the play framework.
