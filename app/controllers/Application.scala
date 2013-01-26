@@ -11,7 +11,7 @@ object Application extends Controller {
     val mongoClient =  MongoClient()
     val mongoDB = mongoClient("testing")("scores")
     for { x <- mongoDB} println(x)
-    Ok(views.html.index("AA"))
+    Ok(views.html.index("Mongo"))
   }
   
 }
