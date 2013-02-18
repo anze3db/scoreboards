@@ -1,5 +1,6 @@
 package controllers
 
+import com.mongodb.casbah.Imports._
 import play.api._
 import play.api.mvc._
 import play.api.data._
@@ -15,9 +16,10 @@ object Register extends Controller {
       "password" -> nonEmptyText,
       "confirm" -> nonEmptyText,
       "realName" -> text
-    )(Registration.apply)(Registration.unapply)
+    )((user, pass, pass2, real) => Registration(new ObjectId, user, pass, pass2, real))
+     ((registration: Registration) => Some((registration.username, registration.password, registration.confirm, registration.realName)))
       verifying("Passwords must match", fields => fields match {
-        case Registration(_, password, confirmation, _) => password.equals(confirmation)
+        case Registration(_, _, password, confirmation, _) => password.equals(confirmation)
       })
   )
 
@@ -33,5 +35,10 @@ object Register extends Controller {
         Redirect(routes.Application.index()).flashing("message" -> "User Registered!")
       }
     )
+  }
+  
+  def remove(id : String) = Action { implicit request => 
+      Registrations.remove(id)
+      Redirect(routes.Application.index()).flashing("message" -> "User Deleted!")
   }
 }
