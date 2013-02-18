@@ -40,13 +40,21 @@ object Registrations {
     registrations += grater[Registration].asDBObject(registration)
   }
   
+  def check(username : String, password : String) = {
+    registrations.findOne(MongoDBObject("username" -> username, "password" -> password)).isDefined
+  }
+  def getUserByName(username : String) = {
+    grater[Registration].asObject(registrations.findOne(MongoDBObject("username" -> username)).get)
+  }
+  
   def remove(registration: Registration) { 
     registrations -= grater[Registration].asDBObject(registration)
   }
+  
+  def getUser(id: String) = registrations.findOne(MongoDBObject("_id" -> new ObjectId(id))).get
+  
   def remove(id: String){
-    val _id = new ObjectId(id)
-    val m = MongoDBObject("_id" -> _id)
-    registrations -= registrations.findOne(m).get
+    registrations -= this.getUser(id)
   }
   
   def removeAll = registrations.dropCollection

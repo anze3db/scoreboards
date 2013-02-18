@@ -4,6 +4,8 @@
 
 # Home page
 GET     /                           controllers.Application.index
+GET     /login                      controllers.Application.login
+POST    /login                      controllers.Application.log
 GET     /register                   controllers.Register.index
 POST    /register                   controllers.Register.register
 GET     /remove/:id                 controllers.Register.remove(id:String)
