@@ -1,12 +1,15 @@
 package controllers
 
-import com.mongodb.casbah.Imports._
-import play.api._
-import play.api.mvc._
-import play.api.data._
-import play.api.data.Forms._
-import play.api.data.validation.Constraints._
-import models._
+import com.mongodb.casbah.Imports.ObjectId
+
+import models.User
+import models.Users
+import play.api.data.Form
+import play.api.data.Forms.mapping
+import play.api.data.Forms.nonEmptyText
+import play.api.data.Forms.text
+import play.api.mvc.Action
+import play.api.mvc.Controller
 
 // STEP 2:
 object Register extends Controller {
@@ -16,10 +19,10 @@ object Register extends Controller {
       "password" -> nonEmptyText,
       "confirm" -> nonEmptyText,
       "realName" -> text
-    )((user, pass, pass2, real) => Registration(new ObjectId, user, pass, pass2, real))
-     ((registration: Registration) => Some((registration.username, registration.password, registration.confirm, registration.realName)))
+    )((user, pass, pass2, real) => User(new ObjectId, user, pass, pass2, real))
+     ((registration: User) => Some((registration.username, registration.password, registration.confirm, registration.realName)))
       verifying("Passwords must match", fields => fields match {
-        case Registration(_, _, password, confirmation, _) => password.equals(confirmation)
+        case User(_, _, password, confirmation, _) => password.equals(confirmation)
       })
   )
 
@@ -31,14 +34,14 @@ object Register extends Controller {
     registrationForm.bindFromRequest.fold(
       form => BadRequest(views.html.register(form)),
       registration => {
-        Registrations.create(registration)
+        Users.create(registration)
         Redirect(routes.Application.index()).flashing("message" -> "User Registered!")
       }
     )
   }
   
   def remove(id : String) = Action { implicit request => 
-      Registrations.remove(id)
+      Users.remove(id)
       Redirect(routes.Application.index()).flashing("message" -> "User Deleted!")
   }
 }

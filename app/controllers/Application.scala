@@ -1,13 +1,12 @@
 package controllers
 
-import play.api._
-import play.api.mvc._
-import models._
-import com.mongodb.casbah.Imports._
-import play.api.data._
-import play.api.data.Forms._
-import play.api.data.validation.Constraints._
-import views.html.defaultpages.badRequest
+import models.Users
+import play.api.data.Form
+import play.api.data.Forms.nonEmptyText
+import play.api.data.Forms.tuple
+import play.api.mvc.Action
+import play.api.mvc.Controller
+import play.api.mvc.Security
 
 object Application extends Controller {
 
@@ -16,26 +15,18 @@ object Application extends Controller {
       "username" -> nonEmptyText,
       "password" -> nonEmptyText
     ) verifying ("Invalid email or password", result => result match {
-      case (username,password) => check(username, password)
+      case (username,password) => Users.check(username, password)
     })
   )
-  
-  def check(username : String, password : String) = {
-    Registrations.check(username, password)
-  }
   
   def index = Action { implicit request =>
 
       val user = request.session.get(Security.username);
       user match {
-        case Some(u) => Ok(views.html.index(Registrations.all))
+        case Some(u) => Ok(views.html.index(Users.all))
         case None => Redirect(routes.Application.login())
                       .flashing("message" -> "PLEASE LOGIN!")
       }
-      
-      //Registrations.create(r)
-      
-      //Registrations.remove(Registration("Ime", "pass", "pass", "Name"))
   }
   
   def login = Action { implicit request => 
@@ -45,11 +36,11 @@ object Application extends Controller {
     loginForm.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.login(formWithErrors)),
       user =>  {
-            Registrations.getUserByName(user._1)
+            Users.getUserByName(user._1)
             println(user._1);
             Redirect(routes.Application.index())
                   .flashing("message" -> "Locked in!")
-                  .withSession(Security.username -> Registrations.getUserByName(user._1).id.toString)
+                  .withSession(Security.username -> Users.getUserByName(user._1).id.toString)
       }
     )
   }

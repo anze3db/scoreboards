@@ -17,12 +17,12 @@
   </div>
 }
 
-@main("Super Simple Sample") {
+@main("Login form") {
 
     @form(action = routes.Application.log, 'class -> "form-horizontal") {
 
       <fieldset>
-        <legend>Registration</legend>
+        <legend>Login</legend>
         @* GLOBAL ERROR/FLASH MESSAGE *@
         @loginForm.globalError.map { error => 
           <div class='row'>
@@ -32,6 +32,6 @@
         @input(loginForm("username"), "Username")
         @input(loginForm("password"), "Password")
       </fieldset>
-      <input type="submit" class="btn" value="Register"/>
+      <input type="submit" class="btn" value="Login"/>
     }
 }
