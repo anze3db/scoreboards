@@ -1,7 +1,6 @@
 package controllers
 
 import com.mongodb.casbah.Imports.ObjectId
-
 import models.User
 import models.Users
 import play.api.data.Form
@@ -10,9 +9,11 @@ import play.api.data.Forms.nonEmptyText
 import play.api.data.Forms.text
 import play.api.mvc.Action
 import play.api.mvc.Controller
+import play.api.data.Forms.tuple
+import play.api.mvc.Security
 
 // STEP 2:
-object Register extends Controller {
+object UserController extends Controller {
   def registrationForm = Form(
     mapping(
       "username" -> nonEmptyText,
@@ -28,11 +29,34 @@ object Register extends Controller {
         case User(_, _, password, confirmation, _) => password.equals(confirmation)
       })
   )
+  
+  def loginForm = Form(
+    tuple(
+      "username" -> nonEmptyText,
+      "password" -> nonEmptyText) verifying ("Invalid email or password", result => result match {
+        case (username, password) => Users.check(username, password)
+    })
+  )
 
   def index = Action { implicit request =>
     Ok(views.html.register(registrationForm))
   }
 
+  def login = Action { implicit request =>
+    Ok(views.html.login(loginForm))
+  }
+  def _login = Action { implicit request =>
+    loginForm.bindFromRequest.fold(
+      formWithErrors => BadRequest(views.html.login(formWithErrors)),
+      user => {
+        Users.getUserByName(user._1)
+        println(user._1);
+        Redirect(routes.Application.index())
+          .flashing("message" -> "Locked in!")
+          .withSession(Security.username -> Users.getUserByName(user._1).id.toString)
+      })
+  }
+  
   def register = Action { implicit request =>
     registrationForm.bindFromRequest.fold(
       form => BadRequest(views.html.register(form)),
