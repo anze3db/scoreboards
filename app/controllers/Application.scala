@@ -6,6 +6,6 @@ import models._
 
 object Application extends Controller {
   def index = Action { implicit request =>
-    Ok(views.html.index(Registrations.all))
+    Ok(views.html.index(Users.all))
   }
 }

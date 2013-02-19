@@ -15,9 +15,9 @@ object Register extends Controller {
       "password" -> nonEmptyText,
       "confirm" -> nonEmptyText,
       "realName" -> text
-    )(Registration.apply)(Registration.unapply)
+    )(User.apply)(User.unapply)
       verifying("Passwords must match", fields => fields match {
-        case Registration(_, password, confirmation, _) => password.equals(confirmation)
+        case User(_, password, confirmation, _) => password.equals(confirmation)
       })
   )
 
@@ -29,7 +29,7 @@ object Register extends Controller {
     registrationForm.bindFromRequest.fold(
       form => BadRequest(views.html.register(form)),
       registration => {
-        Registrations.create(registration)
+        Users.create(registration)
         Redirect(routes.Application.index()).flashing("message" -> "User Registered!")
       }
     )
