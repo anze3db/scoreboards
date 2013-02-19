@@ -23,6 +23,9 @@ object Users {
   def check(username : String, password : String) = {
     users.findOne(MongoDBObject("username" -> ("(?i)"+username).r, "password" -> password)).isDefined
   }
+  def checkUsername(username : String) = {
+    !users.findOne(MongoDBObject("username" -> ("(?i)"+username).r)).isDefined
+  }
   def getUserByName(username : String) = {
     grater[User].asObject(users.findOne(MongoDBObject("username" -> ("(?i)"+username).r)).get)
   }

@@ -21,6 +21,9 @@ object Register extends Controller {
       "realName" -> text
     )((user, pass, pass2, real) => User(new ObjectId, user, pass, pass2, real))
      ((registration: User) => Some((registration.username, registration.password, registration.confirm, registration.realName)))
+      verifying("Username already exsists", fields => fields match {
+        case User(_, username, _, _, _) => Users.checkUsername(username)
+      })
       verifying("Passwords must match", fields => fields match {
         case User(_, _, password, confirmation, _) => password.equals(confirmation)
       })
