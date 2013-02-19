@@ -38,9 +38,6 @@ object UserController extends Controller {
     })
   )
 
-  def index = Action { implicit request =>
-    Ok(views.html.register(registrationForm))
-  }
 
   def login = Action { implicit request =>
     Ok(views.html.login(loginForm))
@@ -56,8 +53,12 @@ object UserController extends Controller {
           .withSession(Security.username -> Users.getUserByName(user._1).id.toString)
       })
   }
-  
+
   def register = Action { implicit request =>
+    Ok(views.html.register(registrationForm))
+  }
+  
+  def _register = Action { implicit request =>
     registrationForm.bindFromRequest.fold(
       form => BadRequest(views.html.register(form)),
       registration => {

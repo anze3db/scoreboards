@@ -6,8 +6,8 @@
 GET     /                                controllers.Application.index
 GET     /user/login                      controllers.UserController.login
 POST    /user/login                      controllers.UserController._login
-GET     /user/register                   controllers.UserController.index
-POST    /user/register                   controllers.UserController.register
+GET     /user/register                   controllers.UserController.register
+POST    /user/register                   controllers.UserController._register
 GET     /user/remove/:id                 controllers.UserController.remove(id:String)
 
 # Map static resources from the /public folder to the /assets URL path
