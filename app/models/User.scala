@@ -21,10 +21,10 @@ object Users {
   }
   
   def check(username : String, password : String) = {
-    users.findOne(MongoDBObject("username" -> username, "password" -> password)).isDefined
+    users.findOne(MongoDBObject("username" -> ("(?i)"+username).r, "password" -> password)).isDefined
   }
   def getUserByName(username : String) = {
-    grater[User].asObject(users.findOne(MongoDBObject("username" -> username)).get)
+    grater[User].asObject(users.findOne(MongoDBObject("username" -> ("(?i)"+username).r)).get)
   }
   
   def remove(registration: User) { 
