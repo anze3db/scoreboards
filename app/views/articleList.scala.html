@@ -1,4 +1,4 @@
-@(users: List[User])(implicit flash: Flash, user: Option[User] = None)
+@(articles: List[Article])(implicit flash: Flash, user: Option[User] = None)
 @main("Super Simple Sample") {
   @if(flash.data.contains("message")){
     <div class='row'>
@@ -25,17 +25,19 @@
   <table class="table table-bordered">
     <thead>
       <tr>
-        <th>Username</th>
-        <th>Real Name</th>
+        <th>text</th>
+        <th>author</th>
+        <th>source</th>
         <th></th>
       </tr>
     </thead>
     <tbody>
-      @users.map { user => 
+      @articles.map { article => 
         <tr>
-          <td>@user.username</td>
-          <td>@user.realName</td>
-          <td><a href="@routes.Admin.removeUser(user.id.toString)">Remove</a></td>
+          <td>@article.text</td>
+          <td>@article.author</td>
+          <td>@article.source</td>
+          <td><a href="@routes.Admin.disableArticle(article.id.toString)">Remove</a></td>
         </tr>
       }
     </tbody>

@@ -22,8 +22,8 @@ object Admin extends Controller with UserTrait {
          article.text, 
          article.author, 
          article.source)))
-      verifying ("Invalid username or password", result => result match {
-        case Article(_,text, _, _) => (text.length > MIN_ARTICLE_LENGTH)
+      verifying ("Sorry, this text is too short for this app.", result => result match {
+        case Article(_,text, _, _) => (true)
     })
   )
 
@@ -32,15 +32,16 @@ object Admin extends Controller with UserTrait {
   }
   
   def articleList = Action { implicit request =>
-    Ok(views.html.userList(Corpus.all))
+    Ok(views.html.articleList(Corpus.all))
   }
   
   def insertNewArticle = Action { implicit request =>
+    println("tooooooooooooooooooooo neki ")
     articleForm.bindFromRequest.fold(
       form => BadRequest(views.html.newArticle(form)),
       article => {
         Corpus.create(article)
-        Redirect(routes.Application.index()).flashing("message" -> "User Registered!")
+        Redirect(routes.Application.index()).flashing("message" -> "Article added!")
       }
     )
   }
@@ -51,13 +52,19 @@ object Admin extends Controller with UserTrait {
 
   def removeUser(id: String) = Action { implicit request =>
 
-  	val flash = if (user.isDefined){
-  		Users.remove(id)
-  		("message" -> "User Deleted!")
-  	}else{
-  		("error" -> "You can't do that! You're a bad perosn")
+    val flash = user map { user => 
+      Users.remove(id)
+      ("message" -> "User Deleted!")
+    }getOrElse{
+  	  ("error" -> "You can't do that! You're a bad perosn")
   	}
     Redirect(routes.Admin.userList()).flashing(flash)
   }
-  
+ 
+
+  def disableArticle(id: String) = Action { implicit request =>
+  	//TODO: dissable article
+    Redirect(routes.Admin.articleList()).flashing(flash)
+  }
+
 }

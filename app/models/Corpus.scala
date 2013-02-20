@@ -25,41 +25,31 @@ object Corpus {
 
   def md5(s: String) = MessageDigest.getInstance("MD5").digest(s.getBytes)
 
-  val articles = MongoConnection()("sampleapp")("registrations")
+  val articles = MongoConnection()("sampleapp")("coprus")
 
-  def all = articles.map(grater[User].asObject(_)).toList
+  def all = articles.map(grater[Article].asObject(_)).toList
 
   def create(article: Article) {
     articles += grater[Article].asDBObject(article)
   }
 
-  def check(username: String, password: String) = {
-    articles.findOne(MongoDBObject(
-      "username" -> ("(?i)" + username).r,
-      "password" -> password)).isDefined
+  def getArticle(id: String) = articles.findOne(MongoDBObject("_id" -> new ObjectId(id))).get
+
+  def getRandomArticle() = {
+    grater[Article].asObject(articles.findOne(MongoDBObject("text" -> "aa")).get)
   }
 
-  def checkUsername(username: String) = {
-    !articles.findOne(MongoDBObject("username" -> ("(?i)" + username).r)).isDefined
-  }
-
-  def getUser(id: String) = articles.findOne(MongoDBObject("_id" -> new ObjectId(id))).get
-
-  def getUserByName(username: String) = {
-    grater[User].asObject(articles.findOne(MongoDBObject("username" -> ("(?i)" + username).r)).get)
-  }
-
-  def getUserById(id: String) = {
+  def getArticleById(id: String) = {
     //grater[User].asObject(users.findOne(MongoDBObject("_id" -> new ObjectId(id))).get)
-    articles.findOne(MongoDBObject("_id" -> new ObjectId(id))).map(grater[User].asObject(_))
+    articles.findOne(MongoDBObject("_id" -> new ObjectId(id))).map(grater[Article].asObject(_))
   }
 
-  def remove(registration: User) {
-    articles -= grater[User].asDBObject(registration)
+  def remove(article: Article) {
+    articles -= grater[Article].asDBObject(article)
   }
 
   def remove(id: String) {
-    articles -= Corpus.this.getUser(id)
+    articles -= Corpus.this.getArticle(id)
   }
 
   def removeAll = articles.dropCollection
