@@ -5,6 +5,11 @@
       <div class="alert alert-success" style="margin-left:30px;margin-top:20px;">@flash.get("message")</div>
     </div>
   }
+  @if(flash.data.contains("error")){
+    <div class='row'>
+      <div class="alert alert-error" style="margin-left:30px;margin-top:20px;">@flash.get("error")</div>
+    </div>
+  }
   <div style="margin-top:20px;margin-bottom:20px;">
      @user match {
       case Some(u) => {
@@ -29,6 +34,7 @@
         <tr>
           <td>@user.username</td>
           <td>@user.realName</td>
+          <td><a href="@routes.Application.remove(user.id.toString)">Remove</a></td>
         </tr>
       }
     </tbody>

@@ -24,4 +24,17 @@ object Application extends Controller {
         .flashing("message" -> "PLEASE LOGIN!")
     }
   }
+
+  def remove(id: String) = Action { implicit request =>
+
+  	val flash = if (user.isDefined){
+  		Users.remove(id)
+  		("message" -> "User Deleted!")
+  	}else{
+  		("error" -> "You can't do that! You're a bad perosn")
+  	}
+    Redirect(routes.Application.index()).flashing(flash)
+
+  }
+  
 }
