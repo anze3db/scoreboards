@@ -5,12 +5,18 @@
 # Home page
 GET     /                           controllers.Application.index
 GET     /me                         controllers.Application.me
+
 GET     /register                   controllers.Auth.newUser
 POST    /register                   controllers.Auth.register
 GET     /login                      controllers.Auth.login
 POST    /login                      controllers.Auth.authenticate
 GET     /logout                     controllers.Auth.logout
-GET     /user/remove/:id            controllers.Application.remove(id:String)
+
+GET     /articleList                controllers.Admin.articleList
+GET     /newArticle                 controllers.Admin.newArticle
+POST    /newArticle                 controllers.Admin.insertNewArticle
+GET     /userList                   controllers.Admin.userList
+GET     /user/remove/:id            controllers.Admin.removeUser(id:String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

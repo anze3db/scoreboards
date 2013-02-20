@@ -4,37 +4,20 @@ import play.api._
 import play.api.mvc._
 import models._
 
-object Application extends Controller {
-  
-  implicit def user(implicit request : RequestHeader) : Option[User] = {  
-    session.get(Security.username).flatMap(Users.getUserById(_))
-  }
-  
+object Application extends Controller with UserTrait {
+
   def index = Action { implicit request =>
-    Ok(views.html.index(Users.all))
+    Ok(views.html.userList(Users.all))
   }
-  
+
   def me = Action { implicit request =>
-    Ok(views.html.index(Users.all))
-    
-    val user = request.session.get(Security.username);
+    Ok(views.html.userList(Users.all))
+
     user match {
-      case Some(u) => Ok(views.html.index(Users.all))
+      case Some(u) => Ok(views.html.userStats(u))
       case None => Redirect(routes.Auth.login())
         .flashing("message" -> "PLEASE LOGIN!")
     }
   }
 
-  def remove(id: String) = Action { implicit request =>
-
-  	val flash = if (user.isDefined){
-  		Users.remove(id)
-  		("message" -> "User Deleted!")
-  	}else{
-  		("error" -> "You can't do that! You're a bad perosn")
-  	}
-    Redirect(routes.Application.index()).flashing(flash)
-
-  }
-  
 }

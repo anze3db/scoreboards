@@ -32,7 +32,11 @@ object Auth extends Controller{
       "confirm" -> nonEmptyText,
       "realName" -> text
     )((user, pass, pass2, real) => User(new ObjectId, user, pass, pass2, real))
-     ((registration: User) => Some((registration.username, registration.password, registration.confirm, registration.realName)))
+     ((registration: User) => Some((
+         registration.username, 
+         registration.password, 
+         registration.confirm, 
+         registration.realName)))
       verifying("Username already exsists", fields => fields match {
         case User(_, username, _, _, _) => Users.checkUsername(username)
       })
@@ -50,8 +54,6 @@ object Auth extends Controller{
   loginForm.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.login(formWithErrors)),
       user => {
-        Users.getUserByName(user._1)
-        println(user._1);
         Redirect(routes.Application.index())
           .flashing("message" -> "Locked in!")
           .withSession(Security.username -> Users.getUserByName(user._1).id.toString)

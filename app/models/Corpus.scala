@@ -15,54 +15,53 @@ import play.api.Play.current
 
 import mongoContext._
 
-case class User(
+case class Article(
   @Key("_id") id: ObjectId = new ObjectId,
-  username: String,
-  password: String,
-  confirm: String,
-  realName: String)
+  text: String,
+  author: String,
+  source: String)
 
-object Users {
+object Corpus {
 
   def md5(s: String) = MessageDigest.getInstance("MD5").digest(s.getBytes)
 
-  val users = MongoConnection()("sampleapp")("registrations")
+  val articles = MongoConnection()("sampleapp")("registrations")
 
-  def all = users.map(grater[User].asObject(_)).toList
+  def all = articles.map(grater[User].asObject(_)).toList
 
-  def create(registration: User) {
-    users += grater[User].asDBObject(registration)
+  def create(article: Article) {
+    articles += grater[Article].asDBObject(article)
   }
 
   def check(username: String, password: String) = {
-    users.findOne(MongoDBObject(
+    articles.findOne(MongoDBObject(
       "username" -> ("(?i)" + username).r,
       "password" -> password)).isDefined
   }
 
   def checkUsername(username: String) = {
-    !users.findOne(MongoDBObject("username" -> ("(?i)" + username).r)).isDefined
+    !articles.findOne(MongoDBObject("username" -> ("(?i)" + username).r)).isDefined
   }
 
-  def getUser(id: String) = users.findOne(MongoDBObject("_id" -> new ObjectId(id))).get
+  def getUser(id: String) = articles.findOne(MongoDBObject("_id" -> new ObjectId(id))).get
 
   def getUserByName(username: String) = {
-    grater[User].asObject(users.findOne(MongoDBObject("username" -> ("(?i)" + username).r)).get)
+    grater[User].asObject(articles.findOne(MongoDBObject("username" -> ("(?i)" + username).r)).get)
   }
 
   def getUserById(id: String) = {
     //grater[User].asObject(users.findOne(MongoDBObject("_id" -> new ObjectId(id))).get)
-    users.findOne(MongoDBObject("_id" -> new ObjectId(id))).map(grater[User].asObject(_))
+    articles.findOne(MongoDBObject("_id" -> new ObjectId(id))).map(grater[User].asObject(_))
   }
 
   def remove(registration: User) {
-    users -= grater[User].asDBObject(registration)
+    articles -= grater[User].asDBObject(registration)
   }
 
   def remove(id: String) {
-    users -= Users.this.getUser(id)
+    articles -= Corpus.this.getUser(id)
   }
 
-  def removeAll = users.dropCollection
+  def removeAll = articles.dropCollection
 
 }
