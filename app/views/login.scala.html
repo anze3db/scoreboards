@@ -1,4 +1,4 @@
-@(registrationForm: Form[models.User])(implicit flash: Flash)
+@(registrationForm: Form[(String,String)])(implicit flash: Flash)
 
 @import play.api.i18n._
 @import views.html.helper._
@@ -19,7 +19,7 @@
 
 @main("Super Simple Sample") {
 
-    @form(action = routes.Auth.register, 'class -> "form-horizontal") {
+    @form(action = routes.Auth.authenticate, 'class -> "form-horizontal") {
 
       <fieldset>
         <legend>Registration</legend>
@@ -31,9 +31,7 @@
         }
         @input(registrationForm("username"), "Username")
         @input(registrationForm("password"), "Password", 'password)
-        @input(registrationForm("confirm"), "Confirm Password", 'password)
-        @input(registrationForm("realName"), "Real Name")
       </fieldset>
-      <input type="submit" class="btn" value="Register"/>
+      <input type="submit" class="btn" value="Login"/>
     }
 }

@@ -1,4 +1,4 @@
-@(registrations: List[Registration])(implicit flash: Flash)
+@(users: List[User])(implicit flash: Flash, user: Option[User] = None)
 @main("Super Simple Sample") {
   @if(flash.data.contains("message")){
     <div class='row'>
@@ -6,7 +6,16 @@
     </div>
   }
   <div style="margin-top:20px;margin-bottom:20px;">
-    <a href="@routes.Register.index" class="btn btn-primary">Register</a>
+     @user match {
+      case Some(u) => {
+        @u.username     
+         <a href="@routes.Auth.logout" class="btn btn-primary">Log out</a>
+      }
+      case None => {
+        <a href="@routes.Auth.newUser" class="btn btn-primary">Register</a>
+        <a href="@routes.Auth.login" class="btn btn-primary">Login</a>
+      }
+    }   
   </div>
   <table class="table table-bordered">
     <thead>
@@ -16,10 +25,10 @@
       </tr>
     </thead>
     <tbody>
-      @registrations.map { registration => 
+      @users.map { user => 
         <tr>
-          <td>@registration.username</td>
-          <td>@registration.realName</td>
+          <td>@user.username</td>
+          <td>@user.realName</td>
         </tr>
       }
     </tbody>

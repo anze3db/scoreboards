@@ -20,7 +20,8 @@ package object mongoContext {
   implicit val context = {
     val context = new Context {
       val name = "global"
-      override val typeHintStrategy = StringTypeHintStrategy(when = TypeHintFrequency.WhenNecessary, typeHint = "_t")
+      override val typeHintStrategy = StringTypeHintStrategy(
+          when = TypeHintFrequency.WhenNecessary, typeHint = "_t")
     }
     context.registerGlobalKeyOverride(remapThis = "id", toThisInstead = "_id")
     context.registerClassLoader(Play.classloader)
@@ -29,7 +30,12 @@ package object mongoContext {
 }
 import mongoContext._
 
-case class User(username: String, password: String, confirm: String, realName: String)
+case class User(
+  @Key("_id") id: ObjectId = new ObjectId,
+  username: String,
+  password: String,
+  confirm: String,
+  realName: String)
 
 object Users {
   val users = MongoConnection()("sampleapp")("registrations")
@@ -51,6 +57,15 @@ object Users {
   }
 
   def getUser(id: String) = users.findOne(MongoDBObject("_id" -> new ObjectId(id))).get
+
+  def getUserByName(username: String) = {
+    grater[User].asObject(users.findOne(MongoDBObject("username" -> ("(?i)" + username).r)).get)
+  }
+  
+  def getUserById(id: String) = {
+    //grater[User].asObject(users.findOne(MongoDBObject("_id" -> new ObjectId(id))).get)
+    users.findOne(MongoDBObject("_id" -> new ObjectId(id))).map(grater[User].asObject(_))
+  }
 
   def remove(registration: User) {
     users -= grater[User].asDBObject(registration)
