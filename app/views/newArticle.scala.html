@@ -16,7 +16,6 @@
     </div>
   </div>
 }
-
 @main("Super Simple Sample") {
 
     @form(action = routes.Admin.insertNewArticle, 'class -> "form-horizontal") {
@@ -29,7 +28,7 @@
             <div class="alert alert-error" style="margin-left:30px;margin-top:20px;">@error.message</div>
           </div>
         }
-        @input(articleForm("text"), "text")
+        @textarea(articleForm("text"))
         @input(articleForm("author"), "author")
         @input(articleForm("source"), "source")
       </fieldset>
