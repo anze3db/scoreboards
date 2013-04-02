@@ -12,10 +12,13 @@ GET     /login                      controllers.Auth.login
 POST    /login                      controllers.Auth.authenticate
 GET     /logout                     controllers.Auth.logout
 
+# Admin pages:
+
+GET     /admin 						controllers.Admin.userList
+
 GET     /articleList                controllers.Admin.articleList
 GET     /newArticle                 controllers.Admin.newArticle
 POST    /newArticle                 controllers.Admin.insertNewArticle
-GET     /userList                   controllers.Admin.userList
 GET     /user/remove/:id            controllers.Admin.removeUser(id:String)
 GET     /article/disable/:id       controllers.Admin.disableArticle(id:String)
 

@@ -1,0 +1,18 @@
+@(implicit user: Option[User] = None)
+@main("Hello world") {
+	<h1>Scoreboards</h1>
+	@user match {
+      case Some(u) => {
+        @u.username     
+         <a href="@routes.Auth.logout" class="btn btn-primary">Log out</a>
+      }
+      case None => {
+        <a href="@routes.Auth.newUser" class="btn btn-primary">Register</a>
+        <a href="@routes.Auth.login" class="btn btn-primary">Login</a>
+      }
+    }
+	
+	
+	
+	
+}
