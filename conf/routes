@@ -15,6 +15,7 @@ GET     /logout                     controllers.Auth.logout
 # Admin pages:
 
 GET     /admin 						controllers.Admin.userList
+GET     /admin/toggle				controllers.Admin.toggle
 
 GET     /articleList                controllers.Admin.articleList
 GET     /newArticle                 controllers.Admin.newArticle

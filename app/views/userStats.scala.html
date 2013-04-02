@@ -1,24 +1,5 @@
-@(user: User)(implicit flash: Flash)
+@()(implicit flash: Flash, user: Option[User] = None)
 @main("Super Simple Sample") {
-  @if(flash.data.contains("message")){
-    <div class='row'>
-      <div class="alert alert-success" style="margin-left:30px;margin-top:20px;">@flash.get("message")</div>
-    </div>
-  }
-  @if(flash.data.contains("error")){
-    <div class='row'>
-      <div class="alert alert-error" style="margin-left:30px;margin-top:20px;">@flash.get("error")</div>
-    </div>
-  }
   
-  
-  <div style="margin-top:20px;margin-bottom:20px;">
-     @user.username     
-     <a href="@routes.Auth.logout" class="btn btn-primary">Log out</a>   
-  </div>
-  
-  <div style="margin-top:20px;margin-bottom:20px;">
-     This page needs pretty graphs and all sorts of pretty things <br>
-     @user.username 
-  </div>
+  Stats for user
 }

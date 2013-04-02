@@ -31,17 +31,17 @@ object Auth extends Controller{
       "password" -> nonEmptyText,
       "confirm" -> nonEmptyText,
       "realName" -> text
-    )((user, pass, pass2, real) => User(new ObjectId, user, pass, pass2, real))
+    )((user, pass, pass2, real) => User(new ObjectId, user, pass, pass2, real, false))
      ((registration: User) => Some((
          registration.username, 
          registration.password, 
          registration.confirm, 
          registration.realName)))
       verifying("Username already exsists", fields => fields match {
-        case User(_, username, _, _, _) => Users.checkUsername(username)
+        case User(_, username, _, _, _, false) => Users.checkUsername(username)
       })
       verifying("Passwords must match", fields => fields match {
-        case User(_, _, password, confirmation, _) => (password == confirmation)
+        case User(_, _, password, confirmation, _, false) => (password == confirmation)
       })
   )
   

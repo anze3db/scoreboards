@@ -1,32 +1,12 @@
 @(users: List[User])(implicit flash: Flash, user: Option[User] = None)
 @main("Super Simple Sample") {
-  @if(flash.data.contains("message")){
-    <div class='row'>
-      <div class="alert alert-success" style="margin-left:30px;margin-top:20px;">@flash.get("message")</div>
-    </div>
-  }
-  @if(flash.data.contains("error")){
-    <div class='row'>
-      <div class="alert alert-error" style="margin-left:30px;margin-top:20px;">@flash.get("error")</div>
-    </div>
-  }
-  <div style="margin-top:20px;margin-bottom:20px;">
-    @user match {
-      case Some(u) => {
-        @u.username     
-         <a href="@routes.Auth.logout" class="btn btn-primary">Log out</a>
-      }
-      case None => {
-        <a href="@routes.Auth.newUser" class="btn btn-primary">Register</a>
-        <a href="@routes.Auth.login" class="btn btn-primary">Login</a>
-      }
-    }   
-  </div>
+  <h1>Admin panel</h1>
   <table class="table table-bordered">
     <thead>
       <tr>
         <th>Username</th>
         <th>Real Name</th>
+        <th>Admin</th>
         <th></th>
       </tr>
     </thead>
@@ -35,6 +15,7 @@
         <tr>
           <td>@user.username</td>
           <td>@user.realName</td>
+          <td><a href="@routes.Admin.toggle">@user.admin</a></td>
           <td><a href="@routes.Admin.removeUser(user.id.toString)">Remove</a></td>
         </tr>
       }

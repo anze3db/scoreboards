@@ -29,15 +29,25 @@ object Admin extends Controller with UserTrait {
 
   def userList = Action { implicit request =>
     user match {
-      case Some(u) => Ok(views.html.userList(Users.all))
+      case Some(u) => Ok(views.html.userList(Users.all)) /* u.admin match {
+        case true  => Ok(views.html.userList(Users.all))
+        case false => 
+          Redirect(routes.Auth.login())
+            .flashing("message" -> "You don't have the power!")
+      } */
       case None => 
         Redirect(routes.Auth.login())
           .flashing("message" -> "PLEASE LOGIN!")
     }
   }
-  
+ 
   def articleList = Action { implicit request =>
     Ok(views.html.articleList(Corpus.all))
+  }
+  
+  def toggle = Action { implicit request =>
+  	Users.toggle(user.get)
+    Redirect(routes.Admin.userList())
   }
   
   def insertNewArticle = Action { implicit request =>

@@ -20,13 +20,14 @@ case class User(
   username: String,
   password: String,
   confirm: String,
-  realName: String)
+  realName: String,
+  admin: Boolean)
 
 object Users {
 
   def md5(s: String) = MessageDigest.getInstance("MD5").digest(s.getBytes)
 
-  val users = MongoConnection()("sampleapp")("registrations")
+  val users = MongoConnection()("scoreboards")("registrations")
 
   def all = users.map(grater[User].asObject(_)).toList
 
@@ -54,12 +55,18 @@ object Users {
     //grater[User].asObject(users.findOne(MongoDBObject("_id" -> new ObjectId(id))).get)
     users.findOne(MongoDBObject("_id" -> new ObjectId(id))).map(grater[User].asObject(_))
   }
+  
+  def toggle(user: User){
+    val obj = users.find(MongoDBObject()).sort(MongoDBObject("year" -> -1)).limit(1);
+    users.update(obj, "admin" -> true)
+  }
 
   def remove(registration: User) {
     users -= grater[User].asDBObject(registration)
   }
 
   def remove(id: String) {
+  
     users -= Users.this.getUser(id)
   }
 

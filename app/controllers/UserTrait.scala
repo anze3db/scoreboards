@@ -11,5 +11,4 @@ trait UserTrait extends Controller{
   implicit def user(implicit request : RequestHeader) : Option[User] = {  
     session.get(Security.username).flatMap(Users.getUserById(_))
   }
-  
 }

@@ -1,4 +1,4 @@
-@(title: String)(content: Html)
+@(title: String)(content: Html)(implicit flash: Flash, user: Option[User] = None)
 
 <!DOCTYPE html>
 
@@ -15,6 +15,28 @@
     </head>
     <body>
       <div class="container">
+	    @if(flash.data.contains("message")){
+		  <div class='row'>
+		    <div class="alert alert-success" style="margin-left:30px;margin-top:20px;">@flash.get("message")</div>
+		  </div>
+		}
+		@if(flash.data.contains("error")){
+		  <div class='row'>
+		    <div class="alert alert-error" style="margin-left:30px;margin-top:20px;">@flash.get("error")</div>
+		  </div>
+		}
+      
+      
+      	@user match {
+	      case Some(u) => {
+	        @u.username  @u.admin  
+	         <a href="@routes.Auth.logout" class="btn btn-primary">Log out</a>
+	      }
+	      case None => {
+	        <a href="@routes.Auth.newUser" class="btn btn-primary">Register</a>
+	        <a href="@routes.Auth.login" class="btn btn-primary">Login</a>
+	      }
+	    }
         @content
       </div>
     </body>
