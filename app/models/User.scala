@@ -56,9 +56,9 @@ object Users {
     users.findOne(MongoDBObject("_id" -> new ObjectId(id))).map(grater[User].asObject(_))
   }
   
-  def toggle(user: User){
-    val obj = users.find(MongoDBObject()).sort(MongoDBObject("year" -> -1)).limit(1);
-    users.update(obj, "admin" -> true)
+  def toggle(user: User) {
+    val obj = grater[User].asDBObject(user)
+    users.update(obj, $set(Seq("admin" -> !user.admin)))
   }
 
   def remove(registration: User) {
