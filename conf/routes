@@ -4,6 +4,8 @@
 
 # Home page
 GET     /                           controllers.Application.index
+GET     /scores                     controllers.Application.scores
+GET     /scores_remove              controllers.Application.removeScore(id: String)
 GET     /me                         controllers.Application.me
 
 GET     /register                   controllers.Auth.newUser

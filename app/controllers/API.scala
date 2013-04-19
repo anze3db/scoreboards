@@ -17,7 +17,7 @@ object API extends Controller with UserTrait {
     
     request.body.asJson match {
       case Some(json) => {
-        Ok("Be happY")
+        BadRequest("Could not parse JSON");
       }
       case None => BadRequest("Could not parse JSON");
     }

@@ -1,0 +1,22 @@
+@(scores: List[Score])(implicit flash: Flash, user: Option[User] = None)
+@main("Scores") {
+  <h1>Scores</h1>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Score</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @scores.map { score => 
+        <tr>
+          <td>@score.username</td>
+          <td>@score.score</td>
+          <td><a href="@routes.Application.removeScore(score.id.toString)">Remove</a></td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
