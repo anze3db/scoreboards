@@ -13,15 +13,9 @@ POST    /login                      controllers.Auth.authenticate
 GET     /logout                     controllers.Auth.logout
 
 # Admin pages:
-
 GET     /admin 						controllers.Admin.userList
 GET     /admin/toggle				controllers.Admin.toggle
-
-GET     /articleList                controllers.Admin.articleList
-GET     /newArticle                 controllers.Admin.newArticle
-POST    /newArticle                 controllers.Admin.insertNewArticle
 GET     /user/remove/:id            controllers.Admin.removeUser(id:String)
-GET     /article/disable/:id       controllers.Admin.disableArticle(id:String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
