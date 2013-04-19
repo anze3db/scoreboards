@@ -7,7 +7,6 @@ import models._
 object Application extends Controller with UserTrait {
 
   def index = Action { implicit request =>
-    
   	Ok(views.html.index())
   }
 

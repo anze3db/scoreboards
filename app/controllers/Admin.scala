@@ -29,12 +29,12 @@ object Admin extends Controller with UserTrait {
 
   def userList = Action { implicit request =>
     user match {
-      case Some(u) => Ok(views.html.userList(Users.all)) /* u.admin match {
+      case Some(u) => u.admin match {
         case true  => Ok(views.html.userList(Users.all))
         case false => 
-          Redirect(routes.Auth.login())
+          Redirect(routes.Application.index())
             .flashing("message" -> "You don't have the power!")
-      } */
+      }
       case None => 
         Redirect(routes.Auth.login())
           .flashing("message" -> "PLEASE LOGIN!")
