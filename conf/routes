@@ -17,5 +17,13 @@ GET     /admin 						controllers.Admin.userList
 GET     /admin/toggle				controllers.Admin.toggle
 GET     /user/remove/:id            controllers.Admin.removeUser(id:String)
 
+# API:
+GET     /API/test                   controllers.API.test
+
+
+GET    /API/add                    controllers.API.add
+
+# 
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
