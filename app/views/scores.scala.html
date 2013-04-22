@@ -1,7 +1,10 @@
 @(scores: List[Score])(implicit flash: Flash, user: Option[User] = None)
 @main("Scores") {
   <h2>Sample query:</h2>
-  <code style=" ">
+  <code>
+    POST http://scoreboards.psywerx.net@routes.API.add
+  </code><br /><br />
+  <code>
     {'secret': @user.get.id.toString, 'username': 'player', 'score': 9001}
   </code>
   <h1>Scores</h1>
