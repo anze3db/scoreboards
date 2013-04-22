@@ -23,7 +23,7 @@ GET     /user/remove/:id            controllers.Admin.removeUser(id:String)
 GET     /API/test                   controllers.API.test
 
 
-GET    /API/add                    controllers.API.add
+POST    /API/add                    controllers.API.add
 
 # 
 

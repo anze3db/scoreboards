@@ -38,4 +38,7 @@ object Scores{
   def getScore(id : String) = scores.findOne(MongoDBObject("_id" -> new ObjectId(id))).get
 
   def create(s : Score) = scores += grater[Score].asDBObject(s)
+  
+  def newScore(id: String, username: String, score: Int) = 
+    Scores.create(new Score(new ObjectId(), new ObjectId(id), username, score))
 }

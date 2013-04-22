@@ -14,10 +14,10 @@ object API extends Controller with UserTrait {
   }
   
   def add = Action { implicit request => 
-    
     request.body.asJson match {
       case Some(json) => {
-        BadRequest("Could not parse JSON");
+        Scores.newScore((json \ "secret").as[String], (json \ "username").as[String], (json \ "score").as[Int])
+        Ok("{status: saved}");
       }
       case None => BadRequest("Could not parse JSON");
     }
@@ -31,5 +31,4 @@ object API extends Controller with UserTrait {
         .flashing("message" -> "PLEASE LOGIN!")
     }
   }
-
 }

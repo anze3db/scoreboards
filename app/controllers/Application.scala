@@ -12,6 +12,8 @@ object Application extends Controller with UserTrait {
   }
   
   def scores = Action { implicit request => 
+    val s = new Score(new ObjectId(), new ObjectId("51716062e4b02084c88f5a4b"), "dh", 1)
+    Scores.create(s)
     Ok(views.html.scores(Scores.allFromUser()))
   }
   

@@ -1,5 +1,9 @@
 @(scores: List[Score])(implicit flash: Flash, user: Option[User] = None)
 @main("Scores") {
+  <h2>Sample query:</h2>
+  <code style=" ">
+    {'secret': @user.get.id.toString, 'username': 'player', 'score': 9001}
+  </code>
   <h1>Scores</h1>
   <table class="table table-bordered">
     <thead>
