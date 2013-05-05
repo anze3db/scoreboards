@@ -1,3 +1,3 @@
-resolvers += "linter" at "http://hairyfotr.github.com/linteRepo/releases"
+resolvers += "linter" at "http://hairyfotr.github.io/linteRepo/releases"
 
 addCompilerPlugin("com.foursquare.lint" %% "linter" % "0.1-SNAPSHOT")
