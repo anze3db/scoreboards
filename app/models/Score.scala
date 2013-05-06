@@ -14,14 +14,23 @@ import play.api.Play
 import play.api.Play.current
 
 import mongoContext._
+import scala.reflect._
+
 
 case class Score(
   @Key("_id") id: ObjectId = new ObjectId,
   user: ObjectId,
   username: String,
   score: Int
-)
+) extends Models
 
-object Scores extends Model[Score]{
+object Scores extends Model[Score] {
   def getModel() = MongoConnection()("scoreboards")("scores")
+  
+  def newScore(id: String, username: String, score: Int) = 
+    Scores.create(new Score(new ObjectId(), new ObjectId(id), username, score))
+  
+  def getScore(id : String) =
+    getModel.findOne(MongoDBObject("_id" -> new ObjectId(id))).get
+
 }
