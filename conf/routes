@@ -16,7 +16,7 @@ GET     /logout                     controllers.Auth.logout
 
 # Admin pages:
 GET     /admin 						controllers.Admin.userList
-GET     /admin/toggle				controllers.Admin.toggle
+GET     /admin/toggle				controllers.Admin.toggle(id:String)
 GET     /user/remove/:id            controllers.Admin.removeUser(id:String)
 
 # API:

@@ -24,8 +24,8 @@ object Admin extends Controller with UserTrait {
     }
   }
 
-  def toggle = Action { implicit request =>
-  	Users.toggle(user.get)
+  def toggle(id: String) = Action { implicit request =>
+  	Users.toggle(Users.getM(id).get)
     Redirect(routes.Admin.userList())
   }
 
