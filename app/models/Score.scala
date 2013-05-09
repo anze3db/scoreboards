@@ -18,7 +18,7 @@ import scala.reflect._
 
 
 case class Score(
-  @Key("_id") id : ObjectId,
+  @Key("_id") id: ObjectId = new ObjectId,
   user: ObjectId,
   username: String,
   score: Int

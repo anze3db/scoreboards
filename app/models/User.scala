@@ -14,7 +14,7 @@ import mongoContext._
 
 
 case class User(
-  @Key("_id") id : ObjectId,
+  @Key("_id") id: ObjectId = new ObjectId,
   username: String,
   password: String,
   confirm: String,

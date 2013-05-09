@@ -16,7 +16,7 @@ import play.api.Play.current
 import mongoContext._
 import scala.reflect._
 
-class Model() { 
+trait Model { 
   
   
 } //Foo trait for Models

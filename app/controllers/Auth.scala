@@ -75,7 +75,7 @@ object Auth extends Controller{
       form => BadRequest(views.html.register(form)),
       registration => {
         Users.create(registration)
-        Redirect(routes.Application.index()).flashing("message" -> "User Registered!").withSession(Security.username -> registration.id.toString())
+        Redirect(routes.Application.index()).flashing("message" -> "User Registered!").withSession(Security.username -> Users.getByName(registration.username).id.toString())
       }
     )
   }
