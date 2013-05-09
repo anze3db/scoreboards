@@ -14,63 +14,44 @@ import mongoContext._
 
 
 case class User(
-  @Key("_id") id: ObjectId = new ObjectId,
+  @Key("_id") id : ObjectId,
   username: String,
   password: String,
   confirm: String,
   realName: String,
-  admin: Boolean){
-  
-  def md5(s : String) = MessageDigest.getInstance("MD5").digest(s.getBytes).map("%02x".format(_)).mkString
-  def hashPassword = User(id, username, md5(password), "", realName, admin)
+  admin: Boolean) extends Model {
+  def md5(s : String) = Users.md5(s)
+  def hashPassword = User(new ObjectId, username, md5(password), "", realName, admin)
 }
 
-object Users {
+object Users extends Models[User] {
 
-  val users = MongoConnection()("scoreboards")("registrations")
-
-  def all = users.map(grater[User].asObject(_)).toList
-
-  def create(registration: User) {
-    val user = registration.hashPassword
-    users += grater[User].asDBObject(user)
+  override val table = db("users")
+  
+  def create(u: User) {
+    super.create(u.hashPassword)
   }
+  
   def md5(s : String) = MessageDigest.getInstance("MD5").digest(s.getBytes).map("%02x".format(_)).mkString
+  
   def check(username: String, password: String) = {
-    users.findOne(MongoDBObject(
+    table.findOne(MongoDBObject(
       "username" -> ("(?i)" + username).r,
       "password" -> md5(password))).isDefined
   }
 
   def checkUsername(username: String) = {
-    !users.findOne(MongoDBObject("username" -> ("(?i)" + username).r)).isDefined
+    !table.findOne(MongoDBObject("username" -> ("(?i)" + username).r)).isDefined
   }
 
-  def getUser(id: String) = users.findOne(MongoDBObject("_id" -> new ObjectId(id))).get
-
-  def getUserByName(username: String) = {
-    grater[User].asObject(users.findOne(MongoDBObject("username" -> ("(?i)" + username).r)).get)
-  }
-
-  def getUserById(id: String) = {
-    //grater[User].asObject(users.findOne(MongoDBObject("_id" -> new ObjectId(id))).get)
-    users.findOne(MongoDBObject("_id" -> new ObjectId(id))).map(grater[User].asObject(_))
+  def getByName(username: String) = {
+    grater[User].asObject(table.findOne(MongoDBObject("username" -> ("(?i)" + username).r)).get)
   }
   
   def toggle(user: User) {
-    val obj = grater[User].asDBObject(user)
-    users.update(obj, $set(Seq("admin" -> !user.admin)))
+    val u = grater[User].asDBObject(user)
+    table.update(u, $set(Seq("admin" -> !user.admin)))
   }
-
-  def remove(u: User) {
-    users -= grater[User].asDBObject(u)
-  }
-
-  def remove(id: String) {
   
-    users -= Users.this.getUser(id)
-  }
-
-  def removeAll = users.dropCollection
-
+  def getM(id: String) = get(id).map(grater[User].asObject(_))
 }

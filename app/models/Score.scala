@@ -18,19 +18,21 @@ import scala.reflect._
 
 
 case class Score(
-  @Key("_id") id: ObjectId = new ObjectId,
+  @Key("_id") id : ObjectId,
   user: ObjectId,
   username: String,
   score: Int
-) extends Models
+) extends Model
 
-object Scores extends Model[Score] {
-  def getModel() = MongoConnection()("scoreboards")("scores")
+object Scores extends Models[Score] {
+  
+  override val table = db("scores")
   
   def newScore(id: String, username: String, score: Int) = 
-    Scores.create(new Score(new ObjectId(), new ObjectId(id), username, score))
+    Scores.create(new Score(new ObjectId, new ObjectId(id), username, score))
   
-  def getScore(id : String) =
-    getModel.findOne(MongoDBObject("_id" -> new ObjectId(id))).get
-
+  def allFromUser()(implicit user: Option[User]) = user match {
+    case Some(u) => table.find(MongoDBObject("user" -> u.id)).map(grater[Score].asObject(_)).toList.sortBy(s => s.score).reverse
+    case None => List[Score]()
+  }
 }

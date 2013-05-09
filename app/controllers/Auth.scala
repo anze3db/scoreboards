@@ -56,7 +56,7 @@ object Auth extends Controller{
       user => {
         Redirect(routes.Application.index())
           .flashing("message" -> "Locked in!")
-          .withSession(Security.username -> Users.getUserByName(user._1).id.toString)
+          .withSession(Security.username -> Users.getByName(user._1).id.toString)
       })
   }
   

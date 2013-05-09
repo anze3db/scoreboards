@@ -13,7 +13,8 @@ class UserTest extends Specification {
   "Users model" should {
     "have an admin user" in new WithApplication{
       
-      val user = Users.getUserByName("admin")
+      val user = Users.getByName("admin")
+      println(user.id.toString())
       user.username.toLowerCase() must equalTo("admin")
       user.admin must equalTo(true)
     }
@@ -21,14 +22,25 @@ class UserTest extends Specification {
       val user = User(new ObjectId, "test-user", "pass", "pass", "test", false)
       Users.create(user)
       
-      val savedUser = Users.getUserByName("test-user")
+      val savedUser = Users.getByName("test-user")
+      
       savedUser.confirm must equalTo("")
       savedUser.password must equalTo(savedUser.md5("pass"))
       savedUser.admin must equalTo(false)
       
-      Users.remove(savedUser)
       
-      Users.getUserByName("test-user") must throwA[NoSuchElementException]
+      val user2 = User(new ObjectId, "test-user2", "pass", "pass", "test", false)
+      Users.create(user2)
+      
+      val savedUser2 = Users.getByName("test-user2")
+      println(savedUser.id.toString())
+      println(savedUser2.id.toString())
+      savedUser.id.toString() must not equalTo(savedUser2.id.toString())
+      
+      Users.remove(savedUser)
+      Users.remove(savedUser2)
+      
+      Users.getByName("test-user") must throwA[NoSuchElementException]
     }
   }
   

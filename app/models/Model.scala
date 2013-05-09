@@ -16,28 +16,37 @@ import play.api.Play.current
 import mongoContext._
 import scala.reflect._
 
-trait Models { } //Foo trait for Models
-
-abstract class Model[A <: Models : Manifest] {
+class Model() { 
   
-  def getModel : MongoCollection;
   
-  // How to add the correct type to the grater?
-  def all = getModel.map(grater[A].asObject(_)).toList//.sortBy(s => s.score).reverse
+} //Foo trait for Models
 
-  def allFromUser()(implicit user: Option[User]) = user match {
-    case Some(u) => getModel.find(MongoDBObject("user" -> u.id)).map(grater[A].asObject(_)).toList//.sortBy(s => s.score).reverse
-    case None => List[A]()
+abstract class Models[A <: Model : Manifest] {
+  
+  val db = MongoConnection()("scoreboards")
+  val table : MongoCollection
+  
+  def all = table.map(grater[A].asObject(_)).toList
+  
+  def get(id: String) = table.findOne(MongoDBObject("_id" -> new ObjectId(id)))
+  
+  def get(id: ObjectId) = table.findOne(MongoDBObject("_id" -> id))
+  
+  def create(m : Model) {
+    table += grater[Model].asDBObject(m)
   }
-
+  
+  def remove(m: Model) {
+    table -= grater[Model].asDBObject(m)
+  }
 
   def remove(id: String) {
-    "a" + id
-    //model -= Scores.this.getScore(id)
+    get(id) match {
+      case Some(m) => table -= m
+      case None => {}
+    } 
   }
-  
 
-  def create(s : Score) = getModel += grater[Score].asDBObject(s)
-  
+  def removeAll = table.dropCollection
 
 }
