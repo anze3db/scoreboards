@@ -62,8 +62,8 @@ object Users {
     users.update(obj, $set(Seq("admin" -> !user.admin)))
   }
 
-  def remove(registration: User) {
-    users -= grater[User].asDBObject(registration)
+  def remove(u: User) {
+    users -= grater[User].asDBObject(u)
   }
 
   def remove(id: String) {
