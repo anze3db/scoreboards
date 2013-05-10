@@ -28,17 +28,17 @@ class APITest extends Specification {
     
   }
   
-  "check if add Action fails on missing parameters" in {
-    val jsons = List(
-        Json.parse("""{"username": "player", "score": 1000}"""),
-        Json.parse("""{"secret": "a seckret key", "score": 1000}"""),
-        Json.parse("""{"secret": "a seckret key", "username": "player"}"""))
-    jsons.foreach(json => {
-    	val result = controllers.API.add()(FakeRequest().withJsonBody(json))
-    	status(result) must equalTo(400) 
-    	contentAsString(result) must equalTo("Missing required fields")
-    }) 
-    
-  }
+//  "check if add Action fails on missing parameters" in {
+//    val jsons = List(
+//        Json.parse("""{"username": "player", "score": 1000}"""),
+//        Json.parse("""{"secret": "a seckret key", "score": 1000}"""),
+//        Json.parse("""{"secret": "a seckret key", "username": "player"}"""))
+//    jsons.foreach(json => {
+//    	val result = controllers.API.add()(FakeRequest().withJsonBody(json))
+//    	status(result) must equalTo(400) 
+//    	contentAsString(result) must equalTo("Missing required fields")
+//    }) 
+//    
+//  }
   
 }

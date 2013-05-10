@@ -56,7 +56,7 @@ object Auth extends Controller{
       user => {
         Redirect(routes.Application.index())
           .flashing("message" -> "Locked in!")
-          .withSession(Security.username -> Users.getUserByName(user._1).id.toString)
+          .withSession(Security.username -> Users.getByName(user._1).id.toString)
       })
   }
   
@@ -75,7 +75,7 @@ object Auth extends Controller{
       form => BadRequest(views.html.register(form)),
       registration => {
         Users.create(registration)
-        Redirect(routes.Application.index()).flashing("message" -> "User Registered!").withSession(Security.username -> registration.id.toString())
+        Redirect(routes.Application.index()).flashing("message" -> "User Registered!").withSession(Security.username -> Users.getByName(registration.username).id.toString())
       }
     )
   }
