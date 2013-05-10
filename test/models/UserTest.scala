@@ -5,16 +5,15 @@ import play.api.test.WithApplication
 import org.bson.types.ObjectId
 import java.security.MessageDigest
 import java.util.NoSuchElementException
+import org.specs2.execute.{AsResult,Result}
+import com.mongodb.casbah.MongoConnection
+import models.{Users => HowCanThisBeOverride}
 
 class UserTest extends Specification {
   
-  
-  
   "Users model" should {
     "have an admin user" in new WithApplication{
-      
       val user = Users.getByName("admin")
-      println(user.id.toString())
       user.username.toLowerCase() must equalTo("admin")
       user.admin must equalTo(true)
     }
@@ -33,8 +32,6 @@ class UserTest extends Specification {
       Users.create(user2)
       
       val savedUser2 = Users.getByName("test-user2")
-      println(savedUser.id.toString())
-      println(savedUser2.id.toString())
       savedUser.id.toString() must not equalTo(savedUser2.id.toString())
       
       Users.remove(savedUser)

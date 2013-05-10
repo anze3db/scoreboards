@@ -55,3 +55,4 @@ object Users extends Models[User] {
   
   def getM(id: String) = get(id).map(grater[User].asObject(_))
 }
+
