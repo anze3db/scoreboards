@@ -5,7 +5,10 @@ import play.api.test._
 import play.api.test.Helpers._
 import play.api.libs.json._
 import views.html.defaultpages.badRequest
+import org.junit.runner.RunWith
+import org.specs2.runner.JUnitRunner
 
+@RunWith(classOf[JUnitRunner])
 class APITest extends Specification {
   "check if test Action returns OK" in {
     val result = controllers.API.test()(FakeRequest())
