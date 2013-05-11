@@ -23,7 +23,8 @@ trait Model {
 
 abstract class Models[A <: Model : Manifest] {
   
-  val db = MongoConnection()("scoreboards")
+  val db = MongoConnection()(Play.current.configuration.getString("mongo").get)
+  
   val table : MongoCollection
   
   def all = table.map(grater[A].asObject(_)).toList

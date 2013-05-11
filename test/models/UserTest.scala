@@ -10,17 +10,28 @@ import com.mongodb.casbah.MongoConnection
 import models.{Users => HowCanThisBeOverride}
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
+import play.api.Play
+import play.api.test.FakeApplication
+import utils.TestDatabase
 
 @RunWith(classOf[JUnitRunner])
-class UserTest extends Specification {
+class UserTest extends Specification with TestDatabase {
+  
+  
+  "Test db" should {
+    "not be the default one" in new WithApplication(fakeApplication){
+      Play.current.configuration.getString("mongo").get must equalTo(name)
+    }
+  }
   
   "Users model" should {
-    "have an admin user" in new WithApplication{
+    "have an admin user" in new WithApplication(fakeApplication){
+      resetDb
       val user = Users.getByName("admin")
       user.username.toLowerCase() must equalTo("admin")
       user.admin must equalTo(true)
     }
-    "be able to create and delete a user" in new WithApplication{
+    "be able to create and delete a user" in new WithApplication(fakeApplication){
       val user = User(new ObjectId, "test-user", "pass", "pass", "test", false)
       Users.create(user)
       
