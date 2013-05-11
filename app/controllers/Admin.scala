@@ -7,7 +7,6 @@ import models._
 import play.api.data._
 import play.api.data.Forms._
 
-
 object Admin extends Controller with UserTrait {
   
   def userList = Action { implicit request =>
