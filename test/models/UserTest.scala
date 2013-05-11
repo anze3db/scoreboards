@@ -8,7 +8,10 @@ import java.util.NoSuchElementException
 import org.specs2.execute.{AsResult,Result}
 import com.mongodb.casbah.MongoConnection
 import models.{Users => HowCanThisBeOverride}
+import org.junit.runner.RunWith
+import org.specs2.runner.JUnitRunner
 
+@RunWith(classOf[JUnitRunner])
 class UserTest extends Specification {
   
   "Users model" should {
