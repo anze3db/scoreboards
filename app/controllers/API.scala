@@ -17,7 +17,7 @@ object API extends Controller with UserTrait {
     request.body.asJson match {
       case Some(json) => {
         Scores.newScore((json \ "secret").as[String], (json \ "username").as[String], (json \ "score").as[Int])
-        Ok("{status: saved}");
+        Ok(Json.obj("status" -> "saved"))
       }
       case None => BadRequest("Could not parse JSON");
     }

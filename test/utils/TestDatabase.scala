@@ -6,6 +6,8 @@ import org.bson.types.ObjectId
 import models.Users
 import com.mongodb.casbah.MongoConnection
 import play.api.Play
+import play.api.test.WithApplication
+import org.specs2.execute.Result
 
 trait TestDatabase {
   

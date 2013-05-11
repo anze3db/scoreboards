@@ -7,9 +7,13 @@ import play.api.libs.json._
 import views.html.defaultpages.badRequest
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
+import utils.TestDatabase
+import models.Users
+import models.Scores
 
 @RunWith(classOf[JUnitRunner])
-class APITest extends Specification {
+class APITest extends Specification with TestDatabase {
+  
   "check if test Action returns OK" in {
     val result = controllers.API.test()(FakeRequest())
   
@@ -31,17 +35,34 @@ class APITest extends Specification {
     
   }
   
+  "check if add Action adds the score" in new WithApplication(fakeApplication){
+    
+    implicit val user = Option(Users.getByName("user"))
+    val json = Json.parse("""{"username": "player", "score": 1000, "secret":""""+user.get.id.toString+""""}""")
+    val result = controllers.API.add()(FakeRequest().withJsonBody(json))
+    status(result) must equalTo(200)
+    
+    (Json.parse(contentAsString(result)) \ "status").as[String] must equalTo("saved")
+    val allScores = Scores.allFromUser()
+    allScores.length must equalTo(1)
+    
+    for{
+      score <- allScores
+    } score.score must equalTo(1000)
+    
+  }
+    
 //  "check if add Action fails on missing parameters" in {
 //    val jsons = List(
 //        Json.parse("""{"username": "player", "score": 1000}"""),
 //        Json.parse("""{"secret": "a seckret key", "score": 1000}"""),
-//        Json.parse("""{"secret": "a seckret key", "username": "player"}"""))
+//        Json.parse("""{"secret": "a seckret key", "username": "player"}""")
+//    )
 //    jsons.foreach(json => {
 //    	val result = controllers.API.add()(FakeRequest().withJsonBody(json))
 //    	status(result) must equalTo(400) 
 //    	contentAsString(result) must equalTo("Missing required fields")
 //    }) 
-//    
 //  }
   
 }
