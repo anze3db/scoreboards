@@ -6,6 +6,8 @@ import models._
 import org.codehaus.jackson.node.ObjectNode
 import play.api.libs.json.Json
 import views.html.defaultpages.badRequest
+import play.api.libs.json.JsResultException
+import play.api.libs.json.JsResultException
 
 object API extends Controller with UserTrait {
 
@@ -16,8 +18,14 @@ object API extends Controller with UserTrait {
   def add = Action { implicit request => 
     request.body.asJson match {
       case Some(json) => {
-        Scores.newScore((json \ "secret").as[String], (json \ "username").as[String], (json \ "score").as[Int])
-        Ok(Json.obj("status" -> "saved"))
+        try{
+        	Scores.newScore((json \ "secret").as[String], (json \ "username").as[String], (json \ "score").as[Int])
+        	Ok(Json.obj("status" -> "saved"))
+        }
+        catch{
+          case _:JsResultException => BadRequest("Missing required fields")
+        }
+        
       }
       case None => BadRequest("Could not parse JSON");
     }

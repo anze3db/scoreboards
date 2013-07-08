@@ -27,7 +27,7 @@ class APITest extends Specification with TestDatabase {
     
     val noJsonResult = controllers.API.add()(FakeRequest())
     status(noJsonResult) must equalTo(400)
-    contentAsString(noJsonResult ) must equalTo("Could not parse JSON")
+    contentAsString(noJsonResult) must equalTo("Could not parse JSON")
     
     val garbledJsonResult = controllers.API.add()(FakeRequest().withTextBody("{{"))
     status(garbledJsonResult) must equalTo(400)
@@ -52,17 +52,17 @@ class APITest extends Specification with TestDatabase {
     
   }
     
-//  "check if add Action fails on missing parameters" in {
-//    val jsons = List(
-//        Json.parse("""{"username": "player", "score": 1000}"""),
-//        Json.parse("""{"secret": "a seckret key", "score": 1000}"""),
-//        Json.parse("""{"secret": "a seckret key", "username": "player"}""")
-//    )
-//    jsons.foreach(json => {
-//    	val result = controllers.API.add()(FakeRequest().withJsonBody(json))
-//    	status(result) must equalTo(400) 
-//    	contentAsString(result) must equalTo("Missing required fields")
-//    }) 
-//  }
+  "check if add Action fails on missing parameters" in {
+    val jsons = List(
+        Json.parse("""{"username": "player", "score": 1000}"""),
+        Json.parse("""{"secret": "a seckret key", "score": 1000}"""),
+        Json.parse("""{"secret": "a seckret key", "username": "player"}""")
+    )
+    jsons.foreach(json => {
+    	val result = controllers.API.add()(FakeRequest().withJsonBody(json))
+    	status(result) must equalTo(400) 
+    	contentAsString(result) must equalTo("Missing required fields")
+    }) 
+  }
   
 }
