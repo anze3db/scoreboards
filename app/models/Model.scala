@@ -33,6 +33,8 @@ abstract class Models[A <: Model : Manifest] {
   
   def get(id: ObjectId) = table.findOne(MongoDBObject("_id" -> id))
   
+  def getM(id: String) = get(id).map(grater[A].asObject(_))
+  
   def create(m : Model) {
     table += grater[Model].asDBObject(m)
   }

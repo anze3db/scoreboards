@@ -53,6 +53,5 @@ object Users extends Models[User] {
     table.update(u, $set(Seq("admin" -> !user.admin)))
   }
   
-  def getM(id: String) = get(id).map(grater[User].asObject(_))
 }
 
