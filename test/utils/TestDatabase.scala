@@ -15,8 +15,7 @@ trait TestDatabase {
 
   val fakeApplication = FakeApplication(additionalConfiguration = Map("mongo" -> name))
 
-  def resetDb = {
-
+  def resetDb {
     val db = MongoConnection()(name)
     db.dropDatabase()
     

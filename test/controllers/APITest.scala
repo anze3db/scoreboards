@@ -24,7 +24,7 @@ class APITest extends Specification with TestDatabase {
   }
   
   "check if add Action fails gracefully" in {
-    
+    resetDb
     val noJsonResult = controllers.API.add()(FakeRequest())
     status(noJsonResult) must equalTo(400)
     contentAsString(noJsonResult) must equalTo("Could not parse JSON")
@@ -36,14 +36,18 @@ class APITest extends Specification with TestDatabase {
   }
   
   "check if add Action adds the score" in new WithApplication(fakeApplication){
-    
+    resetDb
     implicit val user = Option(Users.getByName("user"))
+    
     val json = Json.parse("""{"username": "player", "score": 1000, "secret":""""+user.get.getSecret+""""}""")
     val result = controllers.API.add()(FakeRequest().withJsonBody(json))
     status(result) must equalTo(200)
     
     (Json.parse(contentAsString(result)) \ "status").as[String] must equalTo("saved")
     val allScores = Scores.allFromUser()
+    
+    
+    
     allScores.length must equalTo(1)
     
     for{
@@ -53,6 +57,7 @@ class APITest extends Specification with TestDatabase {
   }
     
   "check if add Action fails on missing parameters" in {
+    resetDb
     val jsons = List(
         Json.parse("""{"username": "player", "score": 1000}"""),
         Json.parse("""{"secret": "a seckret key", "score": 1000}"""),
