@@ -22,6 +22,7 @@ case class User(
   admin: Boolean) extends Model {
   def md5(s : String) = Users.md5(s)
   def hashPassword = User(new ObjectId, username, md5(password), "", realName, admin)
+  def getSecret = id.toString
 }
 
 object Users extends Models[User] {

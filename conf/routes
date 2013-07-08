@@ -24,7 +24,7 @@ GET     /API/test                   controllers.API.test
 
 
 POST    /API/add                    controllers.API.add
-
+# GET     /API/get                    controllers.API.get
 # 
 
 # Map static resources from the /public folder to the /assets URL path

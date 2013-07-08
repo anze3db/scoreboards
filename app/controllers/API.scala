@@ -30,6 +30,25 @@ object API extends Controller with UserTrait {
       case None => BadRequest("Could not parse JSON");
     }
   }
+  
+  def get = Action { implicit request => 
+  
+    request.body.asJson match{
+      case Some(json) => {
+        try{
+        	val id = (json \ "secret").as[String]
+        	val scores = Scores.allFromUser(id)
+        	
+        	Ok(Json.toJson(scores))
+        }
+        catch{
+          case _:JsResultException => BadRequest("Missing required fields")
+        }
+        
+      }
+      case None => BadRequest("Could not parse JSON");
+    }  
+  }
 
   def me = Action { implicit request =>
     

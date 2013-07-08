@@ -38,7 +38,7 @@ class APITest extends Specification with TestDatabase {
   "check if add Action adds the score" in new WithApplication(fakeApplication){
     
     implicit val user = Option(Users.getByName("user"))
-    val json = Json.parse("""{"username": "player", "score": 1000, "secret":""""+user.get.id.toString+""""}""")
+    val json = Json.parse("""{"username": "player", "score": 1000, "secret":""""+user.get.getSecret+""""}""")
     val result = controllers.API.add()(FakeRequest().withJsonBody(json))
     status(result) must equalTo(200)
     
@@ -63,6 +63,31 @@ class APITest extends Specification with TestDatabase {
     	status(result) must equalTo(400) 
     	contentAsString(result) must equalTo("Missing required fields")
     }) 
+  }
+  
+  "check if get Action returns list" in {
+    resetDb
+
+    implicit val user = Option(Users.getByName("user"))
+
+    val name = "test"
+    
+    // Add some scores
+    for (i <- 1 to 20){
+    	Scores.newScore(user.get.getSecret, name, i*100)
+    } 
+    val json = Json.parse("""{"secret": """"+user.get.getSecret+""""}""")
+    val result = controllers.API.get()(FakeRequest().withJsonBody(json))
+    
+    val resultList = Json.parse(contentAsString(result)).as[List[JsObject]]
+    
+    resultList.length must equalTo(10) // limit top 10 results
+    (resultList.head \ "score").as[Int] must equalTo(2000)
+    
+    for(score <- resultList){
+      (score \ "username").as[String] must equalTo(name)
+    }    
+    
   }
   
 }
