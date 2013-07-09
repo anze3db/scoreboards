@@ -51,7 +51,7 @@ object Users extends Models[User] {
   
   def toggle(user: User) {
     val u = grater[User].asDBObject(user)
-    table.update(u, $set(Seq("admin" -> !user.admin)))
+    table.update(u, $set(("admin", !user.admin)))
   }
   
 }
