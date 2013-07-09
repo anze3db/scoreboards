@@ -14,6 +14,8 @@ import models.Scores
 @RunWith(classOf[JUnitRunner])
 class APITest extends Specification with TestDatabase {
   
+  sequential
+  
   "check if test Action returns OK" in {
     val result = controllers.API.test()(FakeRequest())
   
@@ -24,7 +26,7 @@ class APITest extends Specification with TestDatabase {
   }
   
   "check if add Action fails gracefully" in {
-    resetDb
+    
     val noJsonResult = controllers.API.add()(FakeRequest())
     status(noJsonResult) must equalTo(400)
     contentAsString(noJsonResult) must equalTo("Could not parse JSON")
@@ -71,8 +73,9 @@ class APITest extends Specification with TestDatabase {
   }
   
   "check if get Action returns list" in {
+    
     resetDb
-
+    
     implicit val user = Option(Users.getByName("user"))
 
     val name = "test"

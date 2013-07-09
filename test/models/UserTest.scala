@@ -6,6 +6,7 @@ import org.bson.types.ObjectId
 import java.security.MessageDigest
 import java.util.NoSuchElementException
 import org.specs2.execute.{AsResult,Result}
+import org.specs2._
 import com.mongodb.casbah.MongoConnection
 import models.{Users => HowCanThisBeOverride}
 import org.junit.runner.RunWith
@@ -17,6 +18,7 @@ import utils.TestDatabase
 @RunWith(classOf[JUnitRunner])
 class UserTest extends Specification with TestDatabase {
   
+  sequential
   
   "Test db" should {
     "not be the default one" in new WithApplication(fakeApplication){
@@ -25,6 +27,8 @@ class UserTest extends Specification with TestDatabase {
   }
   
   "Users model" should {
+    
+    
     "have an admin user" in new WithApplication(fakeApplication){
       resetDb
       val user = Users.getByName("admin")
@@ -32,6 +36,7 @@ class UserTest extends Specification with TestDatabase {
       user.admin must equalTo(true)
     }
     "be able to create and delete a user" in new WithApplication(fakeApplication){
+      resetDb
       val user = User(new ObjectId, "test-user", "pass", "pass", "test", false)
       Users.create(user)
       
