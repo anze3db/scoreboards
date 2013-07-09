@@ -1,0 +1,1 @@
+play test dist && cd dist && unzip scoreboards-1.0-SNAPSHOT.zip && rsync -avz scoreboards-1.0-SNAPSHOT/* server:www/scoreboards && cd .. && ssh server 'cd www/scoreboards && ./deploy.sh'
