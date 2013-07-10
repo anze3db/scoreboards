@@ -1,6 +1,7 @@
 package controllers;
 
 import org.specs2.mutable._
+import com.mongodb.casbah.Imports._
 import play.api.test._
 import play.api.test.Helpers._
 import play.api.libs.json._
@@ -10,9 +11,10 @@ import org.specs2.runner.JUnitRunner
 import utils.TestDatabase
 import models.Users
 import models.Scores
+import utils.MongoTests
 
 @RunWith(classOf[JUnitRunner])
-class APITest extends Specification with TestDatabase {
+class APITest extends Specification with MongoTests {
   
   sequential
   
@@ -37,8 +39,7 @@ class APITest extends Specification with TestDatabase {
     
   }
   
-  "check if add Action adds the score" in new WithApplication(fakeApplication){
-    resetDb
+  "check if add Action adds the score" in withApp{
     implicit val user = Option(Users.getByName("user"))
     
     val json = Json.parse("""{"username": "player", "score": 1000, "secret":""""+user.get.getSecret+""""}""")
@@ -58,12 +59,11 @@ class APITest extends Specification with TestDatabase {
     
   }
     
-  "check if add Action fails on missing parameters" in {
-    resetDb
+  "check if add Action fails on missing parameters" in withApp {
     val jsons = List(
         Json.parse("""{"username": "player", "score": 1000}"""),
-        Json.parse("""{"secret": "a seckret key", "score": 1000}"""),
-        Json.parse("""{"secret": "a seckret key", "username": "player"}""")
+        Json.parse("""{"secret": """" + new ObjectId + """", "score": 1000}"""),
+        Json.parse("""{"secret": """"+ new ObjectId+ """"", "username": "player"}""")
     )
     jsons.foreach(json => {
     	val result = controllers.API.add()(FakeRequest().withJsonBody(json))
@@ -72,9 +72,7 @@ class APITest extends Specification with TestDatabase {
     }) 
   }
   
-  "check if get Action returns list" in {
-    
-    resetDb
+  "check if get Action returns list" in withApp {
     
     implicit val user = Option(Users.getByName("user"))
 

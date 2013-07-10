@@ -9,6 +9,9 @@ import views.html.defaultpages.badRequest
 import play.api.libs.json.JsResultException
 import play.api.libs.json.JsResultException
 
+import com.mongodb.casbah.Imports._
+
+
 object API extends Controller with UserTrait {
 
   def test = Action { implicit request =>
@@ -19,7 +22,7 @@ object API extends Controller with UserTrait {
     request.body.asJson match {
       case Some(json) => {
         try{
-        	Scores.newScore((json \ "secret").as[String], (json \ "username").as[String], (json \ "score").as[Int])
+        	Scores.insert(Score(new ObjectId, new ObjectId((json \ "secret").as[String]), (json \ "username").as[String], (json \ "score").as[Int]))
         	Ok(Json.obj("status" -> "saved"))
         }
         catch{

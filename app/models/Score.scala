@@ -20,6 +20,7 @@ import play.api.libs.json.JsValue
 import play.api.libs.json.JsString
 import play.api.libs.json.JsObject
 import play.api.libs.json.JsNumber
+import com.novus.salat.dao._
 
 case class Score(
   @Key("_id") id: ObjectId = new ObjectId,
@@ -36,16 +37,36 @@ object Score{
   }
 }
 
-object Scores extends Models[Score] {
-  
-  override val table = db("scores")
-  
-  def newScore(id: String, username: String, score: Int) = 
-    Scores.create(new Score(new ObjectId, new ObjectId(id), username, score))
-  
+object Scores extends SalatDAO[Score, ObjectId](collection = MongoConnection()("scoreboards")("scores")){
+  def allFromUser(id: String)(implicit user: Option[User]) = {
+    user match {
+      case Some(u) => Scores.find(MongoDBObject("user" -> u.id)).toList.sortBy(s => s.score).reverse
+      case None => List[Score]()
+    }
+  }
   def allFromUser()(implicit user: Option[User]) = user match {
-    case Some(u) => table.find(MongoDBObject("user" -> u.id)).map(grater[Score].asObject(_)).toList.sortBy(s => s.score).reverse
+    case Some(u) => Scores.find(MongoDBObject("user" -> u.id)).toList.sortBy(s => s.score).reverse
     case None => List[Score]()
   }
-  def allFromUser(id : String) = table.find(MongoDBObject("user" -> new ObjectId(id))).map(grater[Score].asObject(_)).toList.sortBy(s => s.score).reverse.take(10)
+  
+  def remove(id: String) {
+    Scores.remove(Scores.findOneById(id = new ObjectId(id)).get)
+  } 
+  
+  def newScore(id: String, username: String, score: Int) = 
+    Scores.insert(Score(new ObjectId, new ObjectId(id), username, score))
 }
+
+//object Scores extends Models[Score] {
+//  
+//  override val table = db("scores")
+//  
+//  def newScore(id: String, username: String, score: Int) = 
+//    Scores.create(new Score(new ObjectId, new ObjectId(id), username, score))
+//  
+//  def allFromUser()(implicit user: Option[User]) = user match {
+//    case Some(u) => table.find(MongoDBObject("user" -> u.id)).map(grater[Score].asObject(_)).toList.sortBy(s => s.score).reverse
+//    case None => List[Score]()
+//  }
+//  def allFromUser(id : String) = table.find(MongoDBObject("user" -> new ObjectId(id))).map(grater[Score].asObject(_)).toList.sortBy(s => s.score).reverse.take(10)
+//}
